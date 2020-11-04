@@ -1,0 +1,88 @@
+Catatan
+
+1. copy semua file html ke public
+2. ubah file app.blade.php jadi laravel-default.blade.php di view/layouts
+3. tambahkan file app.blade.php di view/layouts
+4. tambahkan folder di includes dan pages di dalam folder view
+5. tambahkan file view/includes
+	- footer.blade.php
+	- navbar-auth.blade.php
+	- navbar-authenticated.blade.php
+	- navbar.blade.php
+	- script.blade.php
+	- style.blade.php
+6. tambahkan file view/layouts
+	- dashboard.blade.php
+	- success.blade.php
+6. tambahkan file view/pages
+	- home.blade.php
+7. masukan isi index.html ke app.blade.php
+8. pisahkan isi app.blade.php ke dalam folder includes
+9. masukan content ke dalam file home.blade.php
+10. buat @yield('title') di dalam tag title app.blade.php
+	-@stack('prepend-style')
+    	-@include('includes.style')
+    	-@stack('addon-style')
+	-@include('includes.navbar')
+	-@yield('content')
+	-@include('includes.footer')
+	-@stack('prepend-script')
+    	-@include('includes.script')
+    	-@stack('addon-script')
+11. masukan section di file loyouts/pages/home.blade.php
+	-@extends('layouts.app')
+	
+	-@section('title')
+  		Store - Homepage
+	-@endsection
+
+	-@section('content')
+  		isi content
+	-@endsection	
+12. hapus root di routes/web.php
+	- Route::get('/', function () {return view('home');});
+	pindahkan ke atas dan hapus home
+	- Route::get('/', 'HomeController@index')->name('home');
+13. masuk ke file app/Http/Contollers/HomeController.php
+	* hapus
+	public function __construct(){$this->middleware('auth');}
+	* dan rubah
+	return view('pages.home');
+14. masukan template categori dan buat controler baru 
+	php artisan make:controller categoryController
+15. masukan route di navbar
+	{{ route('categories') }}
+
+membuat middleware admin
+1. buka terminal masukan php artisan make:middleware IsAdmin
+2. buka di app/http/middleware/IsAdmin
+3. buka juga kernel.php
+4. masukan use Illuminate\Support\Facades\Auth; di isadmin
+	dan masukan ini
+		if (Auth::user() && Auth::user()->roles == 'ADMIN') {
+            return $next($request);
+        }
+        return redirect('/');
+5. tambahkan ini di karnel 'admin' => \App\Http\Middleware\IsAdmin::class,
+
+buat controller categoryController
+php artisan make:controller Admin\CategoryController --resource
+
+link gambarnya dulu biar muncul
+php artisan storage:link
+untuk melihat route
+php artisan route list
+
+untuk mengubah tabel user jalan kan doctrine
+composer require doctrine/dbal
+
+terahir crud gallery model
+
+
+
+
+
+
+
+
+
