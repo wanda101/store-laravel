@@ -76,6 +76,7 @@ php artisan route list
 untuk mengubah tabel user jalan kan doctrine
 composer require doctrine/dbal
 
+
 terahir crud gallery model
 
 

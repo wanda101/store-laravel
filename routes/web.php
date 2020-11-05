@@ -48,6 +48,7 @@ Route::prefix('admin')
                 Route::resource('category', 'CategoryController');
                 Route::resource('user', 'userController');
                 Route::resource('product', 'productController');
+                Route::resource('product-gallery', 'productgalleryController');
         });
 
 Auth::routes();
