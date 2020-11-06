@@ -76,8 +76,16 @@ php artisan route list
 untuk mengubah tabel user jalan kan doctrine
 composer require doctrine/dbal
 
+cara update revisi di git hub
+git status
+git add .
+git commit -m "Commit ke dua"
+git push -u origin wanda
 
-terahir crud gallery model
+integrasi halaman home
+masuk ke controler home
+
+terahir integrasi login
 
 
 

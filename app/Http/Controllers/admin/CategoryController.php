@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $data['photo'] = $request->file('photo')->store('assets/category','public');
 
         Category::create($data);
-        return redirect()->route('Category.index');
+        return redirect()->route('category.index');
     }
 
     /**
