@@ -85,6 +85,18 @@ git push -u origin wanda
 integrasi halaman home
 masuk ke controler home
 
+intergrasi login
+masuk ke app/provider/routeserviceprovider Rubah /home ke /
+menambahkan categori di auth
+masuk ke registerusers ctrl+clik copy
+public function showRegistrationForm()
+{
+	$categories = Category::all();
+	return view('auth.register',[
+		'categories' => $categories
+	]);
+}
+
 terahir integrasi login
 
 
