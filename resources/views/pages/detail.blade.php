@@ -31,7 +31,7 @@
             </section>
             <!-- breadcrumbs  -->
             <!-- galeri -->
-            <section class="store-gallery" id="gallery" data-aos="zoom-in">
+            <section class="store-gallery mb-3" id="gallery" data-aos="zoom-in">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8" data-aos="zoom-in">
@@ -74,16 +74,27 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-8">
-                                <h1>Sofa Kece</h1>
-                                <div class="owner">Wanda Suwanda</div>
-                                <div class="price">Rp. 7.000.000</div>
+                                <h1>{{ $product->name }}</h1>
+                                <div class="owner">{{ $product->user->store_name }}</div>
+                                <div class="price">Rp. {{ number_format($product->price) }}</div>
                             </div>
                             <div class="col-lg-2" data-aos="zoom-in">
+                                @auth
+                                    <form action="{{ route('detail-add', $product->id) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success px-4 text-white btn-block mb-3"
+                                            >Add To Cart</button
+                                        >
+                                    </form>
+                                @else
                                 <a
-                                    href="/cart.html"
+                                    href="{{ route('login') }}"
                                     class="btn btn-success px-4 text-white btn-block mb-3"
-                                    >Add To Cart</a
+                                    >Sign in to Add</a
                                 >
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -92,22 +103,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-12 col-lg-8">
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit. Quisquam sequi, distinctio
-                                    quod ullam voluptatum doloremque qui, nihil
-                                    eius a deserunt, ducimus laborum odit
-                                    tenetur repellendus aliquam consequuntur
-                                    omnis reiciendis amet.
-                                </p>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit. Hic voluptatum veritatis
-                                    fugiat alias enim? Atque suscipit ab debitis
-                                    culpa explicabo ducimus esse, veritatis
-                                    magni dolore doloremque sapiente molestias
-                                    recusandae accusantium.
-                                </p>
+                                {!! $product->description !!}
                             </div>
                         </div>
                     </div>
@@ -199,22 +195,12 @@
                 data: {
                     activePhoto: 1,
                     photos: [
-                        {
-                            id: 1,
-                            url: "/images/product-details-1.jpg"
-                        },
-                        {
-                            id: 2,
-                            url: "/images/product-details-2.jpg"
-                        },
-                        {
-                            id: 3,
-                            url: "/images/product-details-3.jpg"
-                        },
-                        {
-                            id: 4,
-                            url: "/images/product-details-4.jpg"
-                        }
+                        @foreach($product->galleries as $gallery)
+                            {
+                            id: {{ $gallery->id }},
+                            url: "{{ Storage::url($gallery->photos) }}"
+                            },
+                        @endforeach
                     ]
                 },
                 methods: {

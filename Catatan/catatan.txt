@@ -82,8 +82,7 @@ git add .
 git commit -m "Commit ke dua"
 git push -u origin wanda
 
-integrasi halaman home
-masuk ke controler home
+integrasi modul cart
 
 intergrasi login
 masuk ke app/provider/routeserviceprovider Rubah /home ke /

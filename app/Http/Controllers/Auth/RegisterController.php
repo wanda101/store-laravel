@@ -9,6 +9,7 @@ use App\Category;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -93,4 +94,10 @@ class RegisterController extends Controller
     public function success(){
         return view('auth.success');
     }
+
+    public function check(Request $request)
+    {
+        return User::where('email', $request->email)->count() > 0 ? 'Unavailable' : 'Available';
+    }
 }
+// http://store-laravel.test/api/register/check?email=adadadf@gmail.com untuk mengecek di url

@@ -35,19 +35,17 @@
                 </div>
                 <div class="form-group">
                   <label for="">Email Address</label>
-                  {{-- <input
-                    type="email"
-                    class="form-control"
-                    v-model="name"
-                    autofocus
-                  /> --}}
                   <input id="email" 
+                        v-model="email"
+                        @change="checkForEmailAnvailability()"
                         type="email" 
-                        class="form-control @error('email') is-invalid @enderror" 
+                        class="form-control @error('email') is-invalid @enderror"
+                        :class="{'is-invalid' : this.email_unavailable}" 
                         name="email"
-                        v-model="email" 
                         value="{{ old('email') }}" 
-                        required autocomplete="email" autofocus>
+                        required 
+                        autocomplete="email" 
+                         >
                     @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -139,12 +137,8 @@
                     @endforeach
                   </select>
                 </div>
-                <button type="submit" class="btn btn-success btn-block mt-4"
-                  >Sign Up Now</button
-                >
-                <a href="/login.html" class="btn btn-signup btn-block mt-4"
-                  >Back To Sign In</a
-                >
+                <button type="submit" :disabled="this.email_unavailable" class="btn btn-success btn-block mt-4">Sign Up Now</button>
+                <a href="/login.html" class="btn btn-signup btn-block mt-4">Back To Sign In</a>
               </form>
             </div>
           </div>
@@ -231,30 +225,61 @@
 @push('addon-script')
 <script src="/vendor/vue/vue.js"></script>
     <script src="https://unpkg.com/vue-toasted"></script>
-        <script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
       Vue.use(Toasted);
 
       var register = new Vue({
         el: "#register",
         mounted() {
           AOS.init();
-          // this.$toasted.error(
-          //   "Maaf, Tampaknya email sudah terdaftar di sistem kami",
-          //   {
-          //     position: "top-center",
-          //     className: "rounded",
-          //     duration: 1000,
-          //   }
-          // );
         },
-        data: {
-          name: "wanda suwanda",
-          email: "wandasuwanda@gmail.com",
-          password: "",
-          is_store_open: true,
-          store_name: "",
+        methods: {
+          checkForEmailAnvailability: function(){
+            var self = this;
+            axios.get('{{ route('api-register-check') }}',{
+              params: {
+                email: this.email
+              }
+            })
+            .then(function (response) {
+
+                if (response.data == 'Available') {
+                    self.$toasted.show(
+                      "Email anda tersedia! Silahkan lanjut ke langkah selanjutnya",
+                      {
+                        position: "top-center",
+                        className: "rounded",
+                        duration: 1000,
+                      }
+                    );
+                    self.email_unavailable = false;
+                }else{
+                    self.$toasted.error(
+                      "Maaf, Email anda sudah terdaftar! Pada sistem kami",
+                      {
+                        position: "top-center",
+                        className: "rounded",
+                        duration: 1000
+                      }
+                    );
+                    self.email_unavailable = true;
+                }
+
+              // handle success
+              console.log(response);
+            });
+          }
+        },
+        data() {
+          return {
+            name: "wanda suwanda",
+            email: "wandasuwanda@gmail.com",
+            is_store_open: true,
+            store_name: "",
+            email_unavailable: false,
+            }
         },
       });
     </script>
-    <script src="/script/navbar-scroll.js"></script>
 @endpush
