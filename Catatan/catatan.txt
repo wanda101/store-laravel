@@ -82,6 +82,20 @@ git add .
 git commit -m "Commit ke dua"
 git push -u origin wanda
 
+Perintah GITZSH Nambah GIT
+git init
+git remote add origin git@github.com:azishapidin/kalkulator.git
+git add .
+git commit -m 'initialize'
+git push origin master
+
+
+Cara untuk menghapus pakage 
+composer remove vendor/package
+php artisan config:clear
+php artisan cache:clear
+composer update
+
 integrasi modul cart
 
 intergrasi login

@@ -43,26 +43,34 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @foreach ($carts as $cart)
                   <tr>
                     <td style="width: 20%">
-                      <img
-                        src="/images/product-details-1.jpg"
+                      @if($cart->product->galleries)
+                        <img
+                        src="{{ Storage::url($cart->product->galleries->first()->photos) }}"
                         class="cart-image"
                         alt=""
-                      />
+                        />
+                      @endif
                     </td>
                     <td style="width: 35%">
-                      <div class="product-title">Sofa Ternyaman</div>
-                      <div class="product-subtitle">By Wanda Suwanda</div>
+                      <div class="product-title">{{ $cart->product->name }}</div>
+                      <div class="product-subtitle">By {{ $cart->product->user->store_name }}</div>
                     </td>
                     <td style="width: 35%">
-                      <div class="product-title">Rp. 7.000.000</div>
+                      <div class="product-title">Rp. {{ number_format($cart->product->price) }}</div>
                       <div class="product-subtitle">Rupiah</div>
                     </td>
                     <td style="width: 35%">
-                      <a href="#" class="btn btn-remove-cart"> Remove </a>
+                      <form action="{{ route('cart-delete', $cart->id) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit" class="btn btn-remove-cart"> Remove </button>
+                      </form>
                     </td>
                   </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
