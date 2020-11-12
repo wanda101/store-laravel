@@ -43,6 +43,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @php $totalPrice = 0 @endphp
                   @foreach ($carts as $cart)
                   <tr>
                     <td style="width: 20%">
@@ -55,7 +56,7 @@
                       @endif
                     </td>
                     <td style="width: 35%">
-                      <div class="product-title">{{ $cart->product->name }}</div>
+                      <a class="product-title" style="text-decoration:none" href="javascript:window.history.go(-1);">{{ $cart->product->name }}</a>
                       <div class="product-subtitle">By {{ $cart->product->user->store_name }}</div>
                     </td>
                     <td style="width: 35%">
@@ -66,10 +67,11 @@
                       <form action="{{ route('cart-delete', $cart->id) }}" method="POST">
                         @method('DELETE')
                         @csrf
-                        <button type="submit" class="btn btn-remove-cart"> Remove </button>
+                        <button type="submit" class="btn btn-remove-cart" onclick="return confirm('Apakah anda yakin?')"> Remove </button>
                       </form>
                     </td>
                   </tr>
+                  @php $totalPrice += $cart->product->price @endphp
                   @endforeach
                 </tbody>
               </table>
@@ -83,53 +85,56 @@
               <h2 class="mb-4">Shipping Details</h2>
             </div>
           </div>
-          <div class="row mb-2" data-aos="fade-up" data-aos-delay="200">
+          <form action="" id="locations">
+            <div class="row mb-2" data-aos="fade-up" data-aos-delay="200">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="AddressOne">Address 1</label>
+                <label for="address_one">Address 1</label>
                 <input
                   type="text"
                   class="form-control"
-                  name="addressOne"
-                  id="addressOne"
+                  name="address_one"
+                  id="address_one"
                 />
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="AddressTwo">Address 2</label>
+                <label for="address_two">Address 2</label>
                 <input
                   type="text"
                   class="form-control"
-                  name="addressTwo"
-                  id="addressTwo"
+                  name="address_two"
+                  id="address_two"
                 />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="Province">Province</label>
-                <select name="province" id="province" class="form-control">
-                  <option value="">Jawa Barat</option>
+                <label for="provinces_id">Province</label>
+                <select name="provinces_id" id="provinces_id" v-if="provinces" v-model="provinces_id" class="form-control">
+                  <option v-for="province in provinces" :value="province.id">@{{ province.name }}</option>
                 </select>
+                <select v-else class="form-control" name="" id=""></select>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="City">City</label>
-                <select name="city" id="city" class="form-control">
-                  <option value="">Cirebon</option>
+                <label for="regencies_id">City</label>
+                <select name="regencies_id" id="regencies_id" v-if="regencies" v-model="regencies_id" class="form-control">
+                  <option v-for="regency in regencies" :value="regency.id">@{{ regency.name }}</option>
                 </select>
+                <select v-else class="form-control" name="" id=""></select>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="PostalCode">Postal Code</label>
+                <label for="zip_code">Postal Code</label>
                 <input
                   type="text"
                   class="form-control"
-                  name="postalCode"
-                  id="postalCode"
+                  name="zip_code"
+                  id="zip_code"
                 />
               </div>
             </div>
@@ -146,12 +151,12 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="Mobile">Mobile</label>
+                <label for="phone_number">Mobile</label>
                 <input
                   type="text"
                   class="form-control"
-                  name="mobile"
-                  id="mobile"
+                  name="phone_number"
+                  id="phone_number"
                 />
               </div>
             </div>
@@ -166,19 +171,19 @@
           </div>
           <div class="row mb-2" data-aos="fade-up" data-aos-delay="200">
             <div class="col-4 col-md-2">
-              <div class="product-title">Rp. 10.000</div>
+              <div class="product-title">Rp. 0</div>
               <div class="product-subtitle">Country Tax</div>
             </div>
             <div class="col-4 col-md-2">
-              <div class="product-title">Rp. 10.000</div>
+              <div class="product-title">Rp. 0</div>
               <div class="product-subtitle">Product Insurance</div>
             </div>
             <div class="col-4 col-md-2">
-              <div class="product-title">Rp. 10.000</div>
+              <div class="product-title">Rp. 0</div>
               <div class="product-subtitle">Ship To Jakarta</div>
             </div>
             <div class="col-4 col-md-3">
-              <div class="product-title text-success">Rp. 100.000</div>
+              <div class="product-title text-success">Rp. {{ number_format($totalPrice ?? 0) }}</div>
               <div class="product-subtitle">Total</div>
             </div>
             <div class="col-8 col-md-3">
@@ -190,8 +195,52 @@
               </a>
             </div>
           </div>
+          </form>
         </div>
       </section>
     </div>
     <!-- Akhir Content -->
 @endsection
+@push('addon-script')
+    <script src="/vendor/vue/vue.js"></script>
+    <script src="https://unpkg.com/vue-toasted"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            var locations = new Vue({
+                el: "#locations",
+                mounted() {
+                    AOS.init();
+                    this.getProvincesData();
+                },
+                data: {
+                    provinces: null,
+                    regencies: null,
+                    provinces_id: null,
+                    regencies_id: null,
+                },
+                methods: {
+                  getProvincesData(){
+                    var self = this;
+                    axios.get('{{ route('api-provinces') }}')
+                    .then(function(response){
+                      self.provinces = response.data;
+                    })
+                  },
+                  getRegenciesData(){
+                    var self = this;
+                    axios.get('{{ url('api/regencies') }}/' + self.provinces_id)
+                    .then(function(response){
+                      self.regencies = response.data;
+                    })
+                  },
+                },
+                watch: {
+                  provinces_id: function(val, oldVal){
+                    this.regencies_id = null;
+                    this.getRegenciesData();
+                  }
+                },
+            });
+        </script>
+        <script src="/script/navbar-scroll.js"></script>
+@endpush

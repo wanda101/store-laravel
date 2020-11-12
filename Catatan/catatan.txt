@@ -91,7 +91,7 @@ git push origin master
 
 
 Cara untuk menghapus pakage 
-composer remove vendor/package
+composer remove vendor/azishapidin
 php artisan config:clear
 php artisan cache:clear
 composer update
@@ -109,6 +109,9 @@ public function showRegistrationForm()
 		'categories' => $categories
 	]);
 }
+
+Mengubah CSV Jadi SQL
+https://www.convertcsv.com/csv-to-sql.htm
 
 terahir integrasi login
 
