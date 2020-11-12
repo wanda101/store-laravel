@@ -96,8 +96,6 @@ php artisan config:clear
 php artisan cache:clear
 composer update
 
-integrasi modul cart
-
 intergrasi login
 masuk ke app/provider/routeserviceprovider Rubah /home ke /
 menambahkan categori di auth
@@ -113,8 +111,7 @@ public function showRegistrationForm()
 Mengubah CSV Jadi SQL
 https://www.convertcsv.com/csv-to-sql.htm
 
-terahir integrasi login
-
+modul cart selesai
 
 
 
