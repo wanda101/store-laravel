@@ -113,6 +113,22 @@ https://www.convertcsv.com/csv-to-sql.htm
 
 modul cart selesai
 
+cara menginstal midtrans
+1. composer require midtrans/midtrans-php
+2. masuk ke config/services.php
+	'midtrans' => [
+        'serverKey' => env('MIDTRANS_SERVER_KEY'),
+        'clientKey' => env('MIDTRANS_CLIENT_KEY'),
+        'isProduction' => env('MIDTRANS_IS_PRODUCTION'),
+        'isSanitized' => env('MIDTRANS_IS_SANITIZED'),
+        'is3ds' => env('MIDTRANS_IS_3DS'),
+    ]
+3. Masuk ke file .env
+	MIDTRANS_SERVER_KEY=""
+	MIDTRANS_CLIENT_KEY=""
+	MIDTRANS_IS_PRODUCTION=false
+	MIDTRANS_IS_SANITIZED=true
+	MIDTRANS_IS_3DS=true
 
 
 

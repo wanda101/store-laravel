@@ -14,16 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+
 Route::get('/categories', 'CategoryController@index')->name('categories');
 Route::get('/categories/{id}', 'CategoryController@detail')->name('categories-detail');
+
 Route::get('/details/{id}', 'DetailController@index')->name('detail');
 Route::post('/details/{id}', 'DetailController@add')->name('detail-add');
 
+Route::get('/checkout/callback', 'CheckoutController@callback')->name('midtrans-callback');
+Route::get('/success', 'CartController@success')->name('success');
+Route::get('/register/success', 'Auth\RegisterController@success')->name('success');
+
+
+Route::group(['middleware' => ['auth']], function(){
+
 Route::get('/cart', 'CartController@index')->name('cart');
 Route::delete('/cart/{id}', 'CartController@delete')->name('cart-delete');
-Route::get('/success', 'CartController@success')->name('success');
+Route::post('/checkout', 'CheckoutController@process')->name('checkout');
 
-Route::get('/register/success', 'Auth\RegisterController@success')->name('success');
 Route::get('/dashboard', 'DashboardController@index')
         ->name('dashboard');
 
@@ -43,6 +51,7 @@ Route::get('/dashboard/settings', 'DashboardSettingController@store')
         ->name('dashboard-settings-store');
 Route::get('/dashboard/account', 'DashboardSettingController@account')
         ->name('dashboard-settings-account');
+});
 
 // ->middleware('auth,'admin) 
 Route::prefix('admin')

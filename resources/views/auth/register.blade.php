@@ -138,7 +138,7 @@
                   </select>
                 </div>
                 <button type="submit" :disabled="this.email_unavailable" class="btn btn-success btn-block mt-4">Sign Up Now</button>
-                <a href="/login.html" class="btn btn-signup btn-block mt-4">Back To Sign In</a>
+                <a href="{{ route('login') }}" class="btn btn-signup btn-block mt-4">Back To Sign In</a>
               </form>
             </div>
           </div>
